@@ -29,3 +29,8 @@ target
 .idea
 *.iml
 /.idea/
+.idea/misc.xml
+.idea/modules.xml
+.idea/orders.iml
+.idea/vcs.xml
+
