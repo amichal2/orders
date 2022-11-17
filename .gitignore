@@ -28,3 +28,4 @@ target
 # Intellij
 .idea
 *.iml
+/.idea/
