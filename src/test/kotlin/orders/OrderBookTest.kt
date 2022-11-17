@@ -1,5 +1,6 @@
 package orders
 
+import kotlin.test.assertFailsWith
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -81,6 +82,30 @@ internal class OrderBookTest {
         assertEquals(expectedPrice, orderBook.retrievePriceFromLevel(side, level))
     }
 
+    @Test
+    internal fun `throws exception instead of price when level is negative`() {
+        assertFailsWith<IllegalArgumentException>(
+            message = "Illegal level -5",
+            block = { orderBook.retrievePriceFromLevel('O', -5) }
+        )
+    }
+
+    @Test
+    internal fun `throws exception instead of price when side is unknown`() {
+        assertFailsWith<IllegalArgumentException>(
+            message = "Unknown side Z",
+            block = { orderBook.retrievePriceFromLevel('Z', 2) }
+        )
+    }
+
+    @Test
+    internal fun `throws exception when price not found`() {
+        assertFailsWith<IllegalStateException>(
+            message = "No price found for side B and level 100",
+            block = { orderBook.retrievePriceFromLevel('B', 100) }
+        )
+    }
+
     @ParameterizedTest
     @CsvSource(
         "281, 'O', 1",
@@ -94,6 +119,30 @@ internal class OrderBookTest {
     )
     internal fun `retrieves total size from given level`(expectedSize: Long, side: Char, level: Int) {
         assertEquals(expectedSize, orderBook.retrieveTotalSizeFromLevel(side, level))
+    }
+
+    @Test
+    internal fun `throws exception instead of total size when level is negative`() {
+        assertFailsWith<IllegalArgumentException>(
+            message = "Illegal level -5",
+            block = { orderBook.retrieveTotalSizeFromLevel('O', -5) }
+        )
+    }
+
+    @Test
+    internal fun `throws exception instead of total size when side is unknown`() {
+        assertFailsWith<IllegalArgumentException>(
+            message = "Unknown side Z",
+            block = { orderBook.retrieveTotalSizeFromLevel('Z', 2) }
+        )
+    }
+
+    @Test
+    internal fun `throws exception when size not found`() {
+        assertFailsWith<IllegalStateException>(
+            message = "No size found for side B and level 100",
+            block = { orderBook.retrieveTotalSizeFromLevel('B', 100) }
+        )
     }
 
     @Test
@@ -127,5 +176,13 @@ internal class OrderBookTest {
         )
 
         assertThat(offers).containsExactlyElementsOf(orderBook.retrieveOrdersFromSide('O'))
+    }
+
+    @Test
+    internal fun `throws exception instead of orders when side is unknown`() {
+        assertFailsWith<IllegalArgumentException>(
+            message = "Unknown side Z",
+            block = { orderBook.retrieveOrdersFromSide('Z') }
+        )
     }
 }
